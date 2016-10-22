@@ -22,7 +22,7 @@ static void sigpipe_handler(int signal) {
 int server_setup(struct server *s) {
     if (NULL == s) return EXIT_FAILURE;
 
-    sig_t sig = signal(SIGPIPE, sigpipe_handler);
+    void (*sig)(int) = signal(SIGPIPE, sigpipe_handler);
     if (SIG_ERR == sig) {
         perror("failed to install SIGPIPE handler");
         return EXIT_FAILURE;
@@ -64,6 +64,15 @@ exit_failure:
     s->success = 0;
     return EXIT_FAILURE;
 }
+
+#ifndef FD_COPY
+#define FD_COPY(fdset_orig_, fdset_copy_) \
+    do { \
+        for (int i = 0; i < nfds; i++) { \
+            if (FD_ISSET(i, (fdset_orig_))) FD_SET(i, (fdset_copy_)); \
+        } \
+    } while(0)
+#endif /* ndef FD_COPY */
 
 int server_main_loop(struct server *s) {
     if (NULL == s) return EXIT_FAILURE;
