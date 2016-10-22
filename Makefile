@@ -1,4 +1,4 @@
-CFLAGS += -g
+CFLAGS += -g -std=c11
 
 vpath %.o client server
 vpath %.h client server

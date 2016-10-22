@@ -6,6 +6,7 @@
 
 #include <fcntl.h>
 #include <unistd.h>
+#include <strings.h>
 
 #include <sys/socket.h>
 #include <sys/types.h>
